@@ -9,8 +9,17 @@ class ConstelationControler {
   }
 
   async list(req, res) {
-    let star = new Constelation(this.#db);
-    var data = await star.getItems();
+    let constelation = new Constelation(this.#db);
+    var data = undefined;
+    if (req.query.cloud && req.query.moon && req.query.fog) {
+      data = await constelation.getConstelationQuery(
+        req.query.cloud,
+        req.query.moon,
+        req.query.precipitation,
+        req.query.fog
+      );
+    }
+    if (data == undefined) data = await constelation.getItems();
     res.render("constelation", { data });
   }
 

@@ -7,6 +7,12 @@ class Constelation extends DBModel {
     this.id = 0;
     this.name = "";
     this.description = "";
+    this.image = "";
+    this.enable = 1;
+    this.cloud_level = 1;
+    this.phase_of_moon = 1;
+    this.type_of_precipitation = 1;
+    this.fog_density = 1;
     this.stars = {};
   }
 
@@ -37,11 +43,25 @@ class Constelation extends DBModel {
     return {
       name: "Nazwa konstelatcji",
       description: "Opis konstelatcji",
+      cloud_level: "Poziom zachmurzenia",
+      phase_of_moon: "Faza księzyca",
+      type_of_precipitation: "Rodzaj opadów atmosferycznych",
+      fog_density: "Gęstość mgły",
     };
   }
 
   attributes() {
-    return ["id", "name", "description"];
+    return [
+      "id",
+      "name",
+      "description",
+      "image",
+      "enable",
+      "cloud_level",
+      "phase_of_moon",
+      "type_of_precipitation",
+      "fog_density",
+    ];
   }
 
   async save() {
@@ -93,6 +113,15 @@ class Constelation extends DBModel {
     const sql = `DELETE FROM star_constelation WHERE constelation_id = ?`;
     await this._db.query(sql, id);
     await super.delete(id);
+  }
+
+  async getConstelationQuery(cloud, moon, precipitation, fog) {
+    let sql = `SELECT * FROM ${this.tableName()} WHERE cloud_level >= ${cloud} `;
+    if (moon != undefined) sql += `AND phase_of_moon = ${moon} `;
+    if (precipitation != undefined)
+      sql += ` AND type_of_precipitation = '${precipitation}' `;
+    sql += `AND fog_density >= ${fog} `;
+    return await this._db.query(sql);
   }
 }
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 23 Maj 2023, 01:30
+-- Czas generowania: 24 Maj 2023, 22:44
 -- Wersja serwera: 10.4.24-MariaDB
 -- Wersja PHP: 8.1.6
 
@@ -29,21 +29,27 @@ USE `javascript`;
 -- Struktura tabeli dla tabeli `constelation`
 --
 
+DROP TABLE IF EXISTS `constelation`;
 CREATE TABLE `constelation` (
   `Id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` varchar(255) NOT NULL,
-  `image` varchar(512) NOT NULL
+  `image` varchar(512) NOT NULL,
+  `enable` bit(1) NOT NULL DEFAULT b'1',
+  `cloud_level` tinyint(4) DEFAULT NULL COMMENT 'From 1 to 10',
+  `phase_of_moon` tinyint(4) DEFAULT NULL,
+  `type_of_precipitation` tinyint(4) DEFAULT NULL,
+  `fog_density` tinyint(4) DEFAULT NULL COMMENT 'From 1 to 10'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Zrzut danych tabeli `constelation`
 --
 
-INSERT INTO `constelation` (`Id`, `name`, `description`, `image`) VALUES
-(1, 'starTTTddd', 'starTTTT11', ''),
-(2, 'constelation2', 'constelation2', ''),
-(3, 'TESTTEST', 'TESTTEST', '');
+INSERT INTO `constelation` (`Id`, `name`, `description`, `image`, `enable`, `cloud_level`, `phase_of_moon`, `type_of_precipitation`, `fog_density`) VALUES
+(1, 'starTTTddd', 'starTTTT11', '', b'1', 2, 1, 0, 5),
+(2, 'constelation2', 'constelation2', '', b'1', 10, 2, 0, 2),
+(3, 'TESTTEST', 'TESTTEST', '', b'1', 6, 2, 0, 3);
 
 -- --------------------------------------------------------
 
@@ -51,6 +57,7 @@ INSERT INTO `constelation` (`Id`, `name`, `description`, `image`) VALUES
 -- Struktura tabeli dla tabeli `star`
 --
 
+DROP TABLE IF EXISTS `star`;
 CREATE TABLE `star` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -74,6 +81,7 @@ INSERT INTO `star` (`id`, `name`, `description`, `image`) VALUES
 -- Struktura tabeli dla tabeli `star_constelation`
 --
 
+DROP TABLE IF EXISTS `star_constelation`;
 CREATE TABLE `star_constelation` (
   `star_id` int(11) NOT NULL,
   `constelation_id` int(11) NOT NULL

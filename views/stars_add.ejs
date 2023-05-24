@@ -17,16 +17,29 @@
     <section class="wrapper">
       <h1>Dodaj gwiazdę</h1>
       <form action="/star/add" method="POST">
+        <label><%= data.star.labels()['name'] %></label>
         <input
           type="text"
           name="name"
-          placeholder="Nazwa Gwiazdy"
+          placeholder="<%= data.star.labels()['name'] %>"
           value="<%= data.star.name %>"
         />
         <br />
-        <textarea placeholder="Opis Gwiazdy" name="description">
+        <% if (locals.error) { %> <% if (error['name']) { %>
+        <p class="error-message"><%= error['name'][0] %></p>
+        <% } %> <% } %>
+
+        <label><%= data.star.labels()['description'] %></label>
+        <textarea
+          placeholder="<%= data.star.labels()['description'] %>"
+          name="description"
+        >
 <%= data.star.description %></textarea
         ><br />
+        <% if (locals.error) { %> <% if (error['description']) { %>
+        <p class="error-message"><%= error['description'][0] %></p>
+        <% } %> <% } %>
+
         <label>Przypisz gwiazdę do konstalecji </label>
         <select
           class="form-select form-select-sm"

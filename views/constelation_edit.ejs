@@ -21,13 +21,22 @@
         <input
           type="text"
           name="name"
-          placeholder="Nazwa Gwiazdy"
+          placeholder="<%= star.labels()['name'] %>"
           value="<%= data.constelation.name %>"
         />
         <br />
-        <textarea placeholder="Opis Konstelacji" name="description">
+        <% if (locals.error) { %> <% if (error['name']) { %>
+        <p class="error-message"><%= error['name'][0] %></p>
+        <% } %> <% } %>
+        <textarea
+          placeholder="<%= star.labels()['description'] %>"
+          name="description"
+        >
 <%= data.constelation.description %></textarea
         ><br />
+        <% if (locals.error) { %> <% if (error['description']) { %>
+        <p class="error-message"><%= error['description'][0] %></p>
+        <% } %> <% } %>
         <label>Przypisz konstelacje do gwiazdy </label>
         <select
           class="form-select form-select-sm"

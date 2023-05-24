@@ -10,6 +10,12 @@ html {
   background-size: cover;
 }
 
+p.error-message {
+  margin-top: -10px;
+  color: #dc0043;
+  font-size: small;
+}
+
 .wrapper {
   position: absolute;
   top: 50%;
@@ -31,7 +37,7 @@ html {
 }
 
 .wrapper form input {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   width: 100%;
   padding: 7px;
   border-radius: 4px;
@@ -45,7 +51,7 @@ html {
 }
 
 .wrapper form label {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   font-size: 20px;
 }
 

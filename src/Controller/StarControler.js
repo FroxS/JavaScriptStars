@@ -79,7 +79,8 @@ class StarControler {
         star: star,
         constelations: await constelation.getItems(),
       };
-      res.render("stars_add", { data });
+      let error = star.errors;
+      res.render("stars_add", { data, error });
       return;
     }
     res.redirect("/star");

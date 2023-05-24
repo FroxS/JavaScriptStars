@@ -17,16 +17,78 @@
     <section class="wrapper">
       <h1>Dodaj konstelacje</h1>
       <form action="/constelation/add" method="POST">
+        <label><%= data.constelation.labels()['name'] %></label>
         <input
           type="text"
           name="name"
-          placeholder="Nazwa konstlacji"
+          placeholder="<%= data.constelation.labels()['name'] %>"
           value="<%= data.constelation.name %>"
         />
         <br />
-        <textarea placeholder="Opis konstelacji" name="description">
+
+        <label><%= data.constelation.labels()['description'] %></label>
+        <textarea
+          placeholder="<%= data.constelation.labels()['description'] %>"
+          name="description"
+        >
 <%= data.constelation.description %></textarea
         ><br />
+
+        <label><%= data.constelation.labels()['cloud_level'] %></label>
+        <input
+          type="number"
+          min="0"
+          max="10"
+          name="cloud_level"
+          placeholder="<%= data.constelation.labels()['cloud_level'] %>"
+          value="<%= data.constelation.cloud_level %>"
+        />
+        <br />
+        <% if (locals.error) { %> <% if (error['cloud_level']) { %>
+        <p class="error-message"><%= error['cloud_level'][0] %></p>
+        <% } %> <% } %>
+
+        <label><%= data.constelation.labels()['phase_of_moon'] %> </label>
+        <select
+          required
+          class="form-select form-select-sm"
+          aria-label=".form-select-sm example"
+          name="phase_of_moon"
+        >
+          <option value="1">Pełnia</option>
+          <option value="2">Nów</option>
+          <option value="3">Księżyc w pierwszej kwadrze</option>
+          <option value="4">Księżyc w ostatniej kwadrze</option>
+        </select>
+
+        <label
+          ><%= data.constelation.labels()['type_of_precipitation'] %>
+        </label>
+        <select
+          required
+          class="form-select form-select-sm"
+          aria-label=".form-select-sm example"
+          name="type_of_precipitation"
+        >
+          <option value="1">Deszcz</option>
+          <option value="2">Śnieg</option>
+          <option value="3">Grad</option>
+          <option value="4">Rosa</option>
+        </select>
+
+        <label><%= data.constelation.labels()['fog_density'] %></label>
+        <input
+          type="number"
+          min="0"
+          max="10"
+          name="fog_density"
+          value="<%= data.constelation.fog_density %>"
+        />
+        <br />
+        <% if (locals.error) { %> <% if (error['fog_density']) { %>
+        <p class="error-message"><%= error['fog_density'][0] %></p>
+        <% } %> <% } %>
+
         <label>Przypisz konstelacje do gwiazd </label>
         <select
           class="form-select form-select-sm"
