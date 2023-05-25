@@ -4,6 +4,7 @@ const ConstelationControler = require("./src/Controller/ConstelationControler");
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const HomeControler = require("./src/Controller/HomeControler");
 const app = express();
 
 app.locals.baseURL = "http://localhost:3000/";
@@ -17,14 +18,29 @@ const config = {
   database: "javascript",
 };
 
+app.locals.monDescription = {
+  1: 'Nów',
+  2: 'Pierwsza kwarta',
+  3: 'Pełnia',
+  4: 'Trzecia kwarta',
+}
+
+app.locals.precipitationDescription = {
+  0: 'Brak opadów atmosferycznych',
+  1: 'Deszcz',
+  2: 'Grad',
+  3: 'Śnieg',
+}
+
 const db = new Database(config);
 const constelationController = new ConstelationControler(db);
+const homeControler = new HomeControler(db);
 const starController = new StarControler(db);
 
 app.use(express.static(__dirname + "/public"));
 
 //STARS
-app.get("/", starController.list.bind(starController));
+app.get("/", homeControler.home.bind(homeControler));
 app.get("/star", starController.list.bind(starController));
 
 app.get("/star/edit", starController.editGET.bind(starController));

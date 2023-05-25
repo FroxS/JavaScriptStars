@@ -123,6 +123,37 @@ class Constelation extends DBModel {
     sql += `AND fog_density >= ${fog} `;
     return await this._db.query(sql);
   }
+
+  getMoonName(moon){
+    switch(moon){
+      case 1:
+        return `Nów`;
+      case 2:
+        return `Pierwsza kwarta`;
+      case 3:
+        return `Pełnia`;
+      case 4:
+        return `Trzecia kwarta`;
+      default:
+        return ``
+    }
+  }
+
+  getPrecipitationName(precipitation){
+    switch(precipitation){
+      case 0:
+        return `Brak opadów atmosferycznych`;
+      case 1:
+        return `Deszcz`;
+      case 2:
+        return `Grad`;
+      case 3:
+        return `Śnieg`;
+      default:
+        return ``
+    }
+  }
+
 }
 
 module.exports = Constelation;

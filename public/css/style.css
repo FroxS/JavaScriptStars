@@ -212,3 +212,23 @@ div p a {
   text-decoration: none;
   color: white;
 }
+
+.brak-opadow {
+  margin-right: 10px;
+  margin-top: 3px;
+  height: 18px;
+  float: left;
+
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  width: 200px;
+  border: 1px solid #ccc;
+  display: block;
+  padding: 6px 12px;
+  cursor: pointer;
+}
