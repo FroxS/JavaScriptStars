@@ -2,6 +2,7 @@ const Database = require("./src/Database");
 const StarControler = require("./src/Controller/StarControler");
 const ConstelationControler = require("./src/Controller/ConstelationControler");
 const express = require("express");
+const session = require("express-session");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const HomeControler = require("./src/Controller/HomeControler");
@@ -19,18 +20,33 @@ const config = {
 };
 
 app.locals.monDescription = {
-  1: 'Nów',
-  2: 'Pierwsza kwarta',
-  3: 'Pełnia',
-  4: 'Trzecia kwarta',
-}
+  1: "Nów",
+  2: "Pierwsza kwarta",
+  3: "Pełnia",
+  4: "Trzecia kwarta",
+};
 
 app.locals.precipitationDescription = {
-  0: 'Brak opadów atmosferycznych',
-  1: 'Deszcz',
-  2: 'Grad',
-  3: 'Śnieg',
-}
+  0: "Brak opadów atmosferycznych",
+  1: "Deszcz",
+  2: "Grad",
+  3: "Śnieg",
+};
+
+// Konfiguracja sesji
+app.use(
+  session({
+    secret: "secret-key", // Klucz używany do podpisywania sesji
+    resave: true, // Czy ponownie zapisywać sesję przy każdym żądaniu, nawet jeśli się nie zmieniła
+    saveUninitialized: false, // Czy zapisywać sesję, nawet jeśli nie została zmieniona
+  })
+);
+
+// Middleware dla szablonów
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
 
 const db = new Database(config);
 const constelationController = new ConstelationControler(db);

@@ -18,6 +18,12 @@ class ConstelationControler {
         req.query.precipitation,
         req.query.fog
       );
+      if (data.length <= 0) {
+        req.session.wrongMessage =
+          "Nie znaleziono konstelacji o takich kryteriach";
+        res.redirect("/");
+        return;
+      }
     }
     if (data == undefined) data = await constelation.getItems();
     res.render("constelation", { data });
@@ -36,6 +42,7 @@ class ConstelationControler {
         return;
       }
     }
+    req.session.wrongMessage = `Nie znaleziono konstelacji o id = ${req.query.id}`;
     res.redirect("/constelation");
   }
 
@@ -45,9 +52,11 @@ class ConstelationControler {
     if (await constelation.validate()) {
       constelation.update();
     } else {
+      req.session.wrongMessage = `Nieprawidłowe dane`;
       res.redirect(`/constelation/edit?id=${req.query.id}`);
       return;
     }
+    req.session.successMessage = `Udało się edytować konstelacje ${constelation.name}`;
     res.redirect("/constelation");
   }
 
@@ -56,8 +65,12 @@ class ConstelationControler {
       let constelation = new Constelation(this.#db);
       if (constelation.exist(req.body.id)) {
         constelation.delete(req.body.id);
+      } else {
+        req.session.wrongMessage = `Nie znaleziono konstelacji o id ${req.body.id}`;
       }
     }
+
+    req.session.successMessage = `Udało się usunąć konstelecje o id ${req.body.id}`;
     res.redirect("/constelation");
   }
 
@@ -78,6 +91,7 @@ class ConstelationControler {
     if (await constelation.validate()) {
       await constelation.save();
     } else {
+      req.session.wrongMessage = `Nieprawidłowe dane`;
       let star = new Star(this.#db);
       var data = {
         constelation: constelation,
@@ -86,6 +100,7 @@ class ConstelationControler {
       res.render("constelation_add", { data });
       return;
     }
+    req.session.successMessage = `Udało się dodać konstelecje o id ${req.body.id}`;
     res.redirect("/constelation");
   }
 }
