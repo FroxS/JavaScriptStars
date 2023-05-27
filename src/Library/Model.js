@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 class Model {
   _db;
   static RULE_REQUIRED = "required";
@@ -31,6 +33,20 @@ class Model {
 
   getLabel(attribute) {
     return this.labels()[attribute] || attribute;
+  }
+
+  getUploader() {
+    const multer = require("multer");
+    const { v4: uuidv4 } = require("uuid");
+    const storage = multer.diskStorage({
+      destination: "public/uploads/",
+      filename: (req, file, cb) => {
+        const fileExtension = file.originalname.split(".").pop();
+        const uniqueFilename = `${uuidv4()}.${fileExtension}`;
+        cb(null, uniqueFilename);
+      },
+    });
+    return multer({ storage });
   }
 
   async validate() {
@@ -121,6 +137,22 @@ class Model {
       this.errors[attribute] = [];
     }
     this.errors[attribute].push(message);
+  }
+
+  deleteFile(fileName) {
+    try {
+      if (fs.existsSync(fileName)) {
+        fs.unlinkSync(fileName);
+        console.log("Plik został usunięty:", fileName);
+        return true;
+      } else {
+        console.log("Plik nie istnieje:", fileName);
+        return false;
+      }
+    } catch (error) {
+      console.error("Wystąpił błąd podczas usuwania pliku:", error);
+      return false;
+    }
   }
 }
 

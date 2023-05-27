@@ -23,17 +23,14 @@ p.error-message {
   transform: translate(-50%, -50%);
   max-width: 800px;
   background: rgba(0, 0, 0, 0.6);
-  padding-top: 40px;
-  padding-left: 80px;
-  padding-right: 80px;
-  padding-bottom: 40px;
+  padding: 40px;
   border: 0px;
   border-radius: 10px;
   opacity: 1;
 }
 
-.wrapper h1 {
-  margin-bottom: 30px;
+.wrapper form input[type="checkbox"] {
+  width: 40px;
 }
 
 .wrapper form input {
@@ -58,6 +55,7 @@ p.error-message {
 .wrapper form select {
   margin-bottom: 25px;
   padding: 7px;
+  width: 100%;
   border-radius: 4px;
 }
 
@@ -89,6 +87,7 @@ input[type="number"] {
 
 .star-list {
   background-image: url(/images/starlist-background.jpg);
+  height: 100vh;
 }
 
 .star-table {
@@ -101,14 +100,13 @@ input[type="number"] {
 
 .table-container {
   margin: auto;
-  overflow: auto;
+  /* overflow: auto; */
   max-height: 600px;
   scrollbar-track-color: #ffffff;
 }
 
 table {
-  width: 1200 px;
-
+  width: 1200px;
   margin: auto;
   border-collapse: collapse;
   overflow: hidden;
@@ -117,8 +115,6 @@ table {
 
 h1 {
   text-align: center;
-  margin-top: 100px;
-  margin-bottom: 30px;
   color: #fff;
 }
 
@@ -187,12 +183,16 @@ tbody td:hover:before {
 }
 
 .add-buton {
-  margin-top: 20px;
-  margin-left: 20px;
+  /* margin-top: 20px;
+  margin-left: 20px; */
   width: 40px;
   height: 40px;
   border: 1px solid white;
   border-radius: 50%;
+}
+
+.add-buton p {
+  padding: 0px;
 }
 
 div p {
@@ -218,11 +218,6 @@ div p a {
   margin-top: 3px;
   height: 18px;
   float: left;
-
-}
-
-input[type="file"] {
-  display: none;
 }
 
 .custom-file-upload {
@@ -231,4 +226,15 @@ input[type="file"] {
   display: block;
   padding: 6px 12px;
   cursor: pointer;
+}
+
+select[multiple] option:checked {
+  background-color: #00c98d; /* Twój wybrany kolor tła */
+  color: #ffffff;
+  padding: 5px;
+  font-weight: bold;
+}
+
+select option {
+  padding: 5px;
 }

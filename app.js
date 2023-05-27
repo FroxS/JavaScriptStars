@@ -12,6 +12,9 @@ app.locals.baseURL = "http://localhost:3000/";
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
+var path = require("path");
+global.appRoot = path.resolve(__dirname);
+
 const config = {
   host: "localhost",
   user: "root",
@@ -54,6 +57,8 @@ const homeControler = new HomeControler(db);
 const starController = new StarControler(db);
 
 app.use(express.static(__dirname + "/public"));
+
+//PAGE NOT FOUND
 
 //STARS
 app.get("/", homeControler.home.bind(homeControler));
@@ -105,7 +110,10 @@ app.post(
   "/constelation/add",
   constelationController.addPOST.bind(constelationController)
 );
-
+// Definiowanie ścieżki dla strony 404
+app.use((req, res, next) => {
+  res.status(404).render("pageNotFound");
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

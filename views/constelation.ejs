@@ -6,18 +6,26 @@
 
   <body class="star-list">
     <%- include('../views/nav'); %>
-    <section class="table table-hover star-table">
-      <h1>Lista Konstelacji</h1>
+    <section
+      class="table table-hover d-flex flex-column align-items-center h-100"
+    >
+      <div class="d-flex justify-content-center align-items-center">
+        <h1 class="mx-4">Lista Konstelacji</h1>
+        <div class="add-buton">
+          <p><a href="/constelation/add">+</a></p>
+        </div>
+      </div>
+
       <div class="table-container">
         <table>
           <thead>
             <tr>
+              <th>Zdjęcie</th>
               <th>Nazwa Konstelacji</th>
-              <th>Opis Konstelacji</th>
-              <th>Zachmurzenie</th>
+              <th>Max zachmurzenie (1-10)</th>
               <th>Faza księżyca</th>
               <th>Rodzaj opadów</th>
-              <th>Mgła</th>
+              <th>Max mgła (1-10)</th>
               <th>Edytuj</th>
               <th>Usuń</th>
             </tr>
@@ -25,12 +33,26 @@
           <tbody>
             <% data.forEach((constelation) => { %>
             <tr>
-              <td><%= constelation.name %></td>
-              <td><%= constelation.description %></td>
-              <td><%= locals.monDescription[1] %></td>
-              <td><%= locals.monDescription[2] %></td>
-              <td><%= locals.monDescription[3] %></td>
-              <td><%= locals.monDescription[4] %></td>
+              <td>
+                <img
+                  src="<%= constelation.image %>"
+                  class="img-circle m-2"
+                  alt="Zdjęcie konstalecji"
+                  height="100"
+                />
+              </td>
+              <td>
+                <%= constelation.name %>
+                <a href="/star?constelation=<%= constelation.id %>">gwiazdy</a>
+              </td>
+              <td><%= constelation.cloud_level %></td>
+              <td><%= locals.monDescription[constelation.phase_of_moon] %></td>
+              <td>
+                <%=
+                locals.precipitationDescription[constelation.type_of_precipitation]
+                %>
+              </td>
+              <td><%= constelation.fog_density %></td>
               <td>
                 <a href="/constelation/edit/?id=<%= constelation.id %>"
                   ><button class="edit" hr>Edytuj</button>
@@ -50,9 +72,6 @@
             <% }) %>
           </tbody>
         </table>
-      </div>
-      <div class="add-buton">
-        <p><a href="/constelation/add">+</a></p>
       </div>
     </section>
     <script

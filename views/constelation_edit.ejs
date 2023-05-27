@@ -5,49 +5,157 @@
   </head>
   <body class="addStar">
     <%- include('../views/nav'); %>
-    <section class="wrapper">
-      <h1>Edytuj konstelacje</h1>
+    <section class="wrapper d-flex">
+      <a href="/constelation">Wróć</a>
       <form action="/constelation/edit" method="POST">
         <input type="hidden" name="id" value="<%= data.constelation.id %>" />
-        <label><%= data.constelation.labels()['name'] %></label>
-        <input
-          type="text"
-          name="name"
-          placeholder="<%= data.constelation.labels()['name'] %>"
-          value="<%= data.constelation.name %>"
-        />
-        <br />
-        <% if (locals.error) { %> <% if (error['name']) { %>
-        <p class="error-message"><%= error['name'][0] %></p>
-        <% } %> <% } %>
-        <label><%= data.constelation.labels()['description'] %></label>
-        <textarea
-          placeholder="<%= data.constelation.labels()['description'] %>"
-          name="description"
-        >
-<%= data.constelation.description %></textarea
-        ><br />
-        <% if (locals.error) { %> <% if (error['description']) { %>
-        <p class="error-message"><%= error['description'][0] %></p>
-        <% } %> <% } %>
-        <label>Przypisz konstelacje do gwiazdy </label>
-        <select
-          class="form-select form-select-sm"
-          aria-label=".form-select-sm example"
-          multiple="multiple"
-          name="stars"
-        >
-          <% data.stars.forEach((star) => { %> <% if
-          (data.constelation.stars.includes(star.id)) { %>
-          <option value="<%= star.id %>" selected><%= star.name %></option>
-          <% } else { %>
-          <option value="<%= star.id %>"><%= star.name %></option>
-          <% } %> <% }) %>
-        </select>
-        <a href="/star">Edytuj gwiazdy</a><br />
-        <a href="/star/add">Dodaj gwiazdę</a><br />
-        <input type="submit" name="submit" value="Zapisz" class="edit" />
-        <input type="submit" name="delete" value="Usuń" class="remove" />
+        <div class="d-flex flex-column">
+          <div class="d-flex p-2 justify-content-between align-items-center">
+            <img
+              src="<%= data.constelation.image %>"
+              class="img-circle m-2"
+              alt="Zdjęcie konstalecji"
+              width="200"
+            />
+            <h1>Edytuj konstelacje</h1>
+            <% if (data.constelation.to_show) { %>
+            <input type="checkbox" name="to_show" data-val="true" checked />
+            <% } else { %>
+            <input type="checkbox" name="to_show" data-val="true" /> <% } %>
+          </div>
+
+          <div class="d-flex flex-row">
+            <div class="w-50 p-3">
+              <label><%= data.constelation.labels()['name'] %></label>
+              <input
+                type="text"
+                name="name"
+                placeholder="<%= data.constelation.labels()['name'] %>"
+                value="<%= data.constelation.name %>"
+              />
+              <% if (locals.error) { %> <% if (error['name']) { %>
+              <p class="error-message"><%= error['name'][0] %></p>
+              <% } %> <% } %>
+
+              <label><%= data.constelation.labels()['description'] %></label>
+              <textarea
+                placeholder="<%= data.constelation.labels()['description'] %>"
+                name="description"
+              >
+    <%= data.constelation.description %></textarea
+              >
+              <% if (locals.error) { %> <% if (error['description']) { %>
+              <p class="error-message"><%= error['description'][0] %></p>
+              <% } %> <% } %>
+              <label>Przypisz konstelacje do gwiazd </label>
+              <select
+                class="form-select form-select-sm"
+                aria-label=".form-select-sm example"
+                multiple="multiple"
+                name="stars"
+              >
+                <% data.stars.forEach((star) => { %> <% if
+                (data.constelation.stars.includes(star.id)) { %>
+                <option value="<%= star.id %>" selected>
+                  <%= star.name %>
+                </option>
+                <% } else { %>
+                <option value="<%= star.id %>"><%= star.name %></option>
+                <% } %> <% }) %>
+              </select>
+            </div>
+            <div class="w-50 p-3">
+              <label><%= data.constelation.labels()['cloud_level'] %></label>
+              <select name="cloud_level">
+                <% for (let i = 0; i <= 10; i++) { %> <% if (i ==
+                data.constelation.cloud_level) { %>
+                <option value="<%= i %>" selected><%= i %></option>
+                <% } else { %>
+                <option value="<%= i %>"><%= i %></option>
+                <% } %> <% } %>
+              </select>
+
+              <% if (locals.error) { %> <% if (error['cloud_level']) { %>
+              <p class="error-message"><%= error['cloud_level'][0] %></p>
+              <% } %> <% } %>
+
+              <label><%= data.constelation.labels()['phase_of_moon'] %> </label>
+              <select
+                required
+                class="form-select form-select-sm"
+                aria-label=".form-select-sm example"
+                name="phase_of_moon"
+              >
+                <% if (1 == data.constelation.phase_of_moon) { %>
+                <option value="1" selected>Nów</option>
+                <% } else { %>
+                <option value="1">Nów</option>
+                <% } %> <% if (2 == data.constelation.phase_of_moon) { %>
+                <option value="2" selected>Pierwsza kwarta</option>
+                <% } else { %>
+                <option value="2">Pierwsza kwarta</option>
+                <% } %> <% if (3 == data.constelation.phase_of_moon) { %>
+                <option value="3" selected>Pełnia</option>
+                <% } else { %>
+                <option value="3">Pełnia</option>
+                <% } %> <% if (4 == data.constelation.phase_of_moon) { %>
+                <option value="4" selected>Trzecia kwarta</option>
+                <% } else { %>
+                <option value="4">Trzecia kwarta</option>
+                <% } %>
+              </select>
+
+              <label
+                ><%= data.constelation.labels()['type_of_precipitation'] %>
+              </label>
+              <select
+                required
+                class="form-select form-select-sm"
+                aria-label=".form-select-sm example"
+                name="type_of_precipitation"
+              >
+                <% if (0 == data.constelation.type_of_precipitation) { %>
+                <option value="0" selected>Brak</option>
+                <% } else { %>
+                <option value="0">Brak</option>
+                <% } %> <% if (1 == data.constelation.type_of_precipitation) {
+                %>
+                <option value="1" selected>Deszcz</option>
+                <% } else { %>
+                <option value="1">Deszcz</option>
+                <% } %> <% if (2 == data.constelation.type_of_precipitation) {
+                %>
+                <option value="2" selected>Grad</option>
+                <% } else { %>
+                <option value="2">Grad</option>
+                <% } %> <% if (3 == data.constelation.type_of_precipitation) {
+                %>
+                <option value="3" selected>Śnieg</option>
+                <% } else { %>
+                <option value="3">Śnieg</option>
+                <% } %>
+              </select>
+
+              <label><%= data.constelation.labels()['fog_density'] %></label>
+              <select name="fog_density">
+                <% for (let i = 0; i <= 10; i++) { %> <% if (i ==
+                data.constelation.fog_density) { %>
+                <option value="<%= i %>" selected><%= i %></option>
+                <% } else { %>
+                <option value="<%= i %>"><%= i %></option>
+                <% } %> <% } %>
+              </select>
+              <% if (locals.error) { %> <% if (error['fog_density']) { %>
+              <p class="error-message"><%= error['fog_density'][0] %></p>
+              <% } %> <% } %>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <input type="submit" name="submit" value="Zapisz" class="edit" />
+            <input type="submit" name="delete" value="Usuń" class="remove" />
+          </div>
+        </div>
       </form>
     </section>
     <script

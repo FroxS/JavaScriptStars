@@ -6,7 +6,15 @@
   <body class="addStar">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
       <a class="navbar-brand" href="/">Strona główna</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -21,8 +29,15 @@
       </div>
     </nav>
     <section class="wrapper">
-      <h1>Dodaj gwiazdę</h1>
-      <form action="/star/add" method="POST">
+      <a href="/star">Wróć</a>
+      <form action="/star/add" method="POST" enctype="multipart/form-data">
+        <div class="d-flex p-2 justify-content-between align-items-center">
+          <h1>Dodaj gwiazdę</h1>
+          <% if (data.star.to_show) { %>
+          <input type="checkbox" name="to_show" data-val="true" checked />
+          <% } else { %>
+          <input type="checkbox" name="to_show" data-val="true" /> <% } %>
+        </div>
         <label><%= data.star.labels()['name'] %></label>
         <input
           type="text"
@@ -59,8 +74,8 @@
           </option>
           <% }) %>
         </select>
-        <a href="/constelation">Edytuj konstelacje</a><br />
-        <a href="/constelation/add">Dodaj konstelacje</a><br />
+        <label>Zdjęcie</label>
+        <input type="file" name="image" accept="image/png, image/jpeg" /><br />
         <input type="submit" value="Dodaj" />
       </form>
     </section>

@@ -8,7 +8,7 @@ class Constelation extends DBModel {
     this.name = "";
     this.description = "";
     this.image = "";
-    this.enable = 1;
+    this.to_show = true;
     this.cloud_level = 1;
     this.phase_of_moon = 1;
     this.type_of_precipitation = 1;
@@ -43,10 +43,10 @@ class Constelation extends DBModel {
     return {
       name: "Nazwa konstelatcji",
       description: "Opis konstelatcji",
-      cloud_level: "Poziom zachmurzenia",
+      cloud_level: "Max poziom zachmurzenia",
       phase_of_moon: "Faza księzyca",
       type_of_precipitation: "Rodzaj opadów atmosferycznych",
-      fog_density: "Gęstość mgły",
+      fog_density: "Max gęstość mgły",
     };
   }
 
@@ -56,12 +56,18 @@ class Constelation extends DBModel {
       "name",
       "description",
       "image",
-      "enable",
+      "to_show",
       "cloud_level",
       "phase_of_moon",
       "type_of_precipitation",
       "fog_density",
     ];
+  }
+
+  loadData(data) {
+    super.loadData(data);
+    if (data.to_show) this.to_show = true;
+    else this.to_show = false;
   }
 
   async save() {
@@ -94,6 +100,12 @@ class Constelation extends DBModel {
       var data = { star_id: this.stars, constelation_id: id };
       this._db.insert("star_constelation", data);
     }
+    var found = await this._db.query(
+      `SELECT image FROM ${this.tableName()} WHERE id = ${
+        this[this.primaryKey()]
+      }`
+    );
+    this.image = found[0]["image"];
     await super.update();
   }
 
@@ -116,16 +128,17 @@ class Constelation extends DBModel {
   }
 
   async getConstelationQuery(cloud, moon, precipitation, fog) {
-    let sql = `SELECT * FROM ${this.tableName()} WHERE cloud_level >= ${cloud} `;
+    let sql = `SELECT * FROM ${this.tableName()} WHERE to_show = 1 `;
+    if (cloud != undefined) sql += `AND cloud_level >= ${cloud} `;
     if (moon != undefined) sql += `AND phase_of_moon = ${moon} `;
-    if (precipitation != undefined)
+    if (precipitation != undefined && precipitation != 0)
       sql += ` AND type_of_precipitation = '${precipitation}' `;
     sql += `AND fog_density >= ${fog} `;
     return await this._db.query(sql);
   }
 
-  getMoonName(moon){
-    switch(moon){
+  getMoonName(moon) {
+    switch (moon) {
       case 1:
         return `Nów`;
       case 2:
@@ -135,12 +148,12 @@ class Constelation extends DBModel {
       case 4:
         return `Trzecia kwarta`;
       default:
-        return ``
+        return ``;
     }
   }
 
-  getPrecipitationName(precipitation){
-    switch(precipitation){
+  getPrecipitationName(precipitation) {
+    switch (precipitation) {
       case 0:
         return `Brak opadów atmosferycznych`;
       case 1:
@@ -150,10 +163,9 @@ class Constelation extends DBModel {
       case 3:
         return `Śnieg`;
       default:
-        return ``
+        return ``;
     }
   }
-
 }
 
 module.exports = Constelation;

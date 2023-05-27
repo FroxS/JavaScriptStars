@@ -86,22 +86,43 @@ class ConstelationControler {
   }
 
   async addPOST(req, res) {
-    let constelation = new Constelation(this.#db);
-    constelation.loadData(req.body);
-    if (await constelation.validate()) {
-      await constelation.save();
-    } else {
-      req.session.wrongMessage = `Nieprawidłowe dane`;
-      let star = new Star(this.#db);
-      var data = {
-        constelation: constelation,
-        stars: await star.getItems(),
-      };
-      res.render("constelation_add", { data });
-      return;
-    }
-    req.session.successMessage = `Udało się dodać konstelecje o id ${req.body.id}`;
-    res.redirect("/constelation");
+    var constelation = new Constelation(this.#db);
+    constelation.getUploader().single("image")(req, res, async (err) => {
+      constelation.loadData(req.body);
+      if (err) {
+        // Błąd przetwarzania pliku
+        console.error(err);
+        req.session.wrongMessage = `Błąd przetwarzania pliku`;
+        var data = { constelation: constelation };
+        res.render("constelation_add", { data });
+        return;
+      }
+
+      if (req.file) {
+        const separatorIndex = req.file.path.indexOf("\\");
+        if (separatorIndex !== -1) {
+          constelation.image = req.file.path.substr(separatorIndex);
+        } else {
+          constelation.image = req.file.path;
+        }
+      }
+
+      if (await constelation.validate()) {
+        await constelation.save();
+      } else {
+        req.session.wrongMessage = `Nieprawidłowe dane`;
+        let star = new Star(this.#db);
+        var data = {
+          constelation: constelation,
+          stars: await star.getItems(),
+        };
+        let error = constelation.errors;
+        res.render("constelation_add", { data, error });
+        return;
+      }
+      req.session.successMessage = `Udało się dodać konstelecje o id ${constelation.id}`;
+      res.redirect("/constelation");
+    });
   }
 }
 

@@ -6,7 +6,15 @@
   <body class="addStar">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
       <a class="navbar-brand" href="/">Strona główna</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -21,14 +29,28 @@
       </div>
     </nav>
     <section class="wrapper">
-      <h1>Edytuj gwiazdę</h1>
+      <a href="/star">Wróć</a>
       <form action="/star/edit" method="POST">
+        <div class="d-flex p-2 justify-content-between align-items-center">
+          <img
+            src="<%= data.star.image %>"
+            class="img-circle"
+            alt="Zdjęcie gwaizdy"
+            width="200"
+          />
+          <h1>Edytuj gwiazdę</h1>
+          <% if (data.star.to_show) { %>
+          <input type="checkbox" name="to_show" data-val="true" checked />
+          <% } else { %>
+          <input type="checkbox" name="to_show" data-val="true" /> <% } %>
+        </div>
         <input
           type="hidden"
           name="id"
           placeholder="Nazwa Gwiazdy"
           value="<%= data.star.id %>"
         />
+        <label><%= data.star.labels()['name'] %></label>
         <input
           type="text"
           name="name"
@@ -36,9 +58,19 @@
           value="<%= data.star.name %>"
         />
         <br />
-        <textarea placeholder="Opis Gwiazdy" name="description">
+        <% if (locals.error) { %> <% if (error['name']) { %>
+        <p class="error-message"><%= error['name'][0] %></p>
+        <% } %> <% } %>
+        <label><%= data.star.labels()['description'] %></label>
+        <textarea
+          placeholder="<%= data.star.labels()['description'] %>"
+          name="description"
+        >
 <%= data.star.description %></textarea
         ><br />
+        <% if (locals.error) { %> <% if (error['description']) { %>
+        <p class="error-message"><%= error['description'][0] %></p>
+        <% } %> <% } %>
         <label>Przypisz gwiazdę do konstalecji </label>
         <select
           class="form-select form-select-sm"
@@ -48,7 +80,7 @@
         >
           <% data.constelations.forEach((constelation) => { %> <% if
           (data.star.constelations.includes(constelation.id)) { %>
-          <option value="<%= constelation.dd %>" selected>
+          <option value="<%= constelation.id %>" selected>
             <%= constelation.name %>
           </option>
           <% } else { %>
@@ -57,8 +89,6 @@
           </option>
           <% } %> <% }) %>
         </select>
-        <a href="/constelation">Edytuj konstelacje</a><br />
-        <a href="/constelation/add">Dodaj konstelacje</a><br />
         <input type="submit" name="submit" value="Zapisz" class="edit" />
         <input type="submit" name="delete" value="Usuń" class="remove" />
       </form>

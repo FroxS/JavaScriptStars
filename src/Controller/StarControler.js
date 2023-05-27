@@ -10,8 +10,8 @@ class StarControler {
 
   async list(req, res) {
     let star = new Star(this.#db);
-    if (req.query.consteletaion) {
-      var data = await star.getStarsByConsteletaion(req.query.consteletaion);
+    if (req.query.constelation) {
+      var data = await star.getStarsByConsteletaion(req.query.constelation);
       res.render("stars", { data });
     } else {
       var data = await star.getStars();
@@ -47,6 +47,18 @@ class StarControler {
     res.redirect("/star");
   }
 
+  async editimagePOST(req, res) {
+    // let star = new Star(this.#db);
+    // star.loadData(req.body);
+    // if (await star.validate()) {
+    //   star.update();
+    // } else {
+    //   res.redirect(`/star/edit?id=${req.query.id}`);
+    //   return;
+    // }
+    // res.redirect("/star");
+  }
+
   async deletePOST(req, res) {
     if (req.body.id) {
       let star = new Star(this.#db);
@@ -69,21 +81,41 @@ class StarControler {
   }
 
   async addPOST(req, res) {
-    let star = new Star(this.#db);
-    star.loadData(req.body);
-    if (await star.validate()) {
-      await star.save();
-    } else {
-      let constelation = new Constelation(this.#db);
-      var data = {
-        star: star,
-        constelations: await constelation.getItems(),
-      };
-      let error = star.errors;
-      res.render("stars_add", { data, error });
-      return;
-    }
-    res.redirect("/star");
+    var star = new Star(this.#db);
+    star.getUploader().single("image")(req, res, async (err) => {
+      star.loadData(req.body);
+      if (err) {
+        // Błąd przetwarzania pliku
+        console.error(err);
+        req.session.wrongMessage = `Błąd przetwarzania pliku`;
+        var data = { star: star };
+        res.render("stars_add", { data });
+        return;
+      }
+
+      if (req.file) {
+        const separatorIndex = req.file.path.indexOf("\\");
+        if (separatorIndex !== -1) {
+          star.image = req.file.path.substr(separatorIndex);
+        } else {
+          star.image = req.file.path;
+        }
+      }
+      if (await star.validate()) {
+        await star.save();
+      } else {
+        let constelation = new Constelation(this.#db);
+        var data = {
+          star: star,
+          constelations: await constelation.getItems(),
+        };
+        let error = star.errors;
+        res.render("stars_add", { data, error });
+        return;
+      }
+      req.session.successMessage = `Udało się dodać gwiaze o id ${star.id}`;
+      res.redirect("/star");
+    });
   }
 }
 

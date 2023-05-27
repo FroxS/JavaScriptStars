@@ -5,28 +5,23 @@
   </head>
 
   <body class="star-list">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
-      <a class="navbar-brand" href="/">Strona główna</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/constelation">Konstelacje</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/star">Gwiazdy</a>
-          </li>
-        </ul>
+    <%- include('../views/nav'); %>
+
+    <section
+      class="table table-hover d-flex flex-column align-items-center h-100"
+    >
+      <div class="d-flex justify-content-center align-items-center">
+        <h1 class="mx-4">Lista Gwiazd</h1>
+        <div class="add-buton">
+          <p><a href="/star/add">+</a></p>
+        </div>
       </div>
-    </nav>
-    <section class="table table-hover star-table">
-      <h1>Lista Gwiazd</h1>
+
       <div class="table-container">
         <table>
           <thead>
             <tr>
+              <th>Zdjęcie</th>
               <th>Nazwa Gwiadzy</th>
               <th>Opis Gwiazdy</th>
               <th>Edytuj</th>
@@ -36,6 +31,14 @@
           <tbody>
             <% data.forEach((star) => { %>
             <tr>
+              <td>
+                <img
+                  src="<%= star.image_star %>"
+                  class="img-circle m-2"
+                  alt="Zdjęcie gwaizdy"
+                  height="100"
+                />
+              </td>
               <td><%= star.name_star %></td>
               <td><%= star.description_star %></td>
               <td>
@@ -53,17 +56,11 @@
                   />
                   <input type="submit" class="remove" value="Usuń" />
                 </form>
-                <!-- <a href="/star/remove/?id=<%= star.id_star %>"
-                  ><button class="remove" hr>Usuń</button>
-                </a> -->
               </td>
             </tr>
             <% }) %>
           </tbody>
         </table>
-      </div>
-      <div class="add-buton">
-        <p><a href="/star/add">+</a></p>
       </div>
     </section>
   </body>
