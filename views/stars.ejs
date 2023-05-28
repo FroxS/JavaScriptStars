@@ -63,5 +63,30 @@
         </table>
       </div>
     </section>
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item <%= !pagination.can_back ? 'disabled' : '' %>">
+          <a
+            class="page-link"
+            href="?page=<%= pagination.actual_page -1  %>"
+            tabindex="-1"
+            >Previous</a
+          >
+        </li>
+        <% pagination.pages.forEach(function(page) { %>
+        <li
+          class="page-item <%= pagination.actual_page === page ? 'active' : '' %>"
+        >
+          <a class="page-link" href="?page=<%= page  %>"><%= page %></a>
+        </li>
+        <% }); %>
+        <li class="page-item <%= !pagination.can_next ? 'disabled' : '' %>">
+          <a class="page-link" href="?page=<%= pagination.actual_page +1  %>"
+            >Next</a
+          >
+        </li>
+      </ul>
+    </nav>
   </body>
 </html>

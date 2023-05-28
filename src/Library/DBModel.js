@@ -62,6 +62,12 @@ class DBModel extends Model {
     return await this._db.query(sql);
   }
 
+  async getCount() {
+    var sql = `SELECT count(*) as count  FROM ${this.tableName()}`;
+    var reslut = await this._db.query(sql);
+    return reslut ? reslut[0]["count"] : 0;
+  }
+
   async delete(id) {
     this._db.delete(this.tableName(), id);
   }

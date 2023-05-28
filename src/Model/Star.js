@@ -107,13 +107,25 @@ class Star extends DBModel {
     }
   }
 
-  getStarsByConsteletaion(constelation) {
+  getStarsByConsteletaion(constelation, offset, row_count) {
     var sql = `SELECT s.image as image_star, s.id as id_star ,s.name as name_star, s.description as description_star , c.id as id_constelation ,c.name as name_constelation ,c.description as description_constelation FROM  star as s INNER JOIN star_constelation as sc ON sc.star_id = s.id INNER JOIN constelation as c ON c.Id = sc.constelation_id WHERE c.id = '${constelation}'`;
+    if (offset != undefined && row_count != undefined) {
+      sql += `ORDER BY s.name LIMIT ${offset}, ${row_count};`;
+    }
     return this._db.query(sql);
   }
 
-  getStars() {
+  async getCountStarOfConstelation(constelation) {
+    var sql = `SELECT count(*) as count  FROM  star as s INNER JOIN star_constelation as sc ON sc.star_id = s.id INNER JOIN constelation as c ON c.Id = sc.constelation_id WHERE c.id = '${constelation}'`;
+    var reslut = await this._db.query(sql);
+    return reslut ? reslut[0]["count"] : 0;
+  }
+
+  getStars(offset, row_count) {
     var sql = `SELECT s.image as image_star, s.id as id_star ,s.name as name_star, s.description as description_star FROM  star as s `;
+    if (offset != undefined && row_count != undefined) {
+      sql += `ORDER BY s.name LIMIT ${offset}, ${row_count};`;
+    }
     return this._db.query(sql);
   }
 

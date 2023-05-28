@@ -1,5 +1,6 @@
 const Star = require("../Model/Star");
 const Constelation = require("../Model/Constelation");
+const f = require("session-file-store");
 
 class StarControler {
   #db;
@@ -9,14 +10,49 @@ class StarControler {
   }
 
   async list(req, res) {
-    let star = new Star(this.#db);
+    var star = new Star(this.#db);
+    var page = parseInt(req.query.page ?? 1);
+    var row_count = parseInt(req.query.page_count ?? 5);
     if (req.query.constelation) {
-      var data = await star.getStarsByConsteletaion(req.query.constelation);
-      res.render("stars", { data });
+      let count = parseInt(
+        await star.getCountStarOfConstelation(req.query.constelation)
+      );
+      let pagination = this.getPagination(page, row_count, count);
+      let offset = (page - 1) * row_count;
+      var data = await star.getStarsByConsteletaion(
+        req.query.constelation,
+        offset,
+        row_count
+      );
+      res.render("stars", { data, pagination });
     } else {
-      var data = await star.getStars();
-      res.render("stars", { data });
+      let count = parseInt(await star.getCount());
+      let offset = (page - 1) * row_count;
+      var data = await star.getStars(offset, row_count);
+      let pagination = this.getPagination(page, row_count, count);
+      res.render("stars", { data, pagination });
     }
+  }
+
+  getPagination(actual_page, maxRows, coutData) {
+    var pagination = {
+      can_back: true,
+      can_next: true,
+      actual_page: actual_page,
+      pages: [actual_page - 1, actual_page, actual_page + 1],
+      row_count: maxRows,
+    };
+
+    var max_pages = Math.ceil(coutData / pagination.row_count); //= 9
+    if (pagination.pages[2] > max_pages) {
+      pagination.pages.pop();
+      pagination.can_next = false;
+    }
+    if (pagination.pages[0] == 0) {
+      pagination.pages.shift();
+      pagination.can_back = false;
+    }
+    return pagination;
   }
 
   async editGET(req, res) {
